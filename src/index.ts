@@ -7,12 +7,12 @@ import yargs = require('yargs');
 
 export interface Arguments {
     live: boolean;
-    query: string;
+    search: string;
 }
 
 const argv: Arguments = yargs.options({
     live: { type: 'boolean', default: false, alias: 'l' },
-    query: { type: 'string', default: '', alias: 'q' }
+    search: { type: 'string', default: '', alias: 's' }
 }).argv;
 
 const outputPath = join(__dirname, '..', config.outputPath);
