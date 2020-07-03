@@ -1,0 +1,7 @@
+{
+  "apiKey": "",
+  "origin": "derpibooru.org",
+  "https": true,
+  "outputPath": "output",
+  "maxDownloadAttempts": 10
+}

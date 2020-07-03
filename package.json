@@ -1,0 +1,28 @@
+{
+  "name": "philodown",
+  "version": "0.1.0",
+  "description": "Content downloader for Philomena-based websites",
+  "main": "index.js",
+  "scripts": {
+    "start": "node -r ts-node/register src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Andrew Black",
+    "email": "andrewblack2656@gmail.com",
+    "url": "https://flyingsixtysix.xyz/"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "^2.6.0",
+    "ws": "^7.3.0",
+    "yargs": "^15.4.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^7.2.6",
+    "@types/yargs": "^15.0.5",
+    "typescript": "^3.9.6",
+    "ts-node": "^8.10.2"
+  }
+}
