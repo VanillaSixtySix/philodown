@@ -3,5 +3,6 @@
   "origin": "derpibooru.org",
   "https": true,
   "outputPath": "output",
-  "maxDownloadAttempts": 10
+  "maxDownloadAttempts": 10,
+  "downloadAttemptRetryTime": 30000
 }
