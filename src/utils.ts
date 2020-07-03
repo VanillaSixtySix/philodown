@@ -34,6 +34,7 @@ export async function saveImageMetadata(image: Image) {
 export async function downloadImage(id: number, metadata?: Image, iteration: number = 1) {
     // Rare that we'd need to retry
     if (iteration > 1) {
+        if (iteration > config.maxDownloadAttempts) return;
         console.warn(`Retrying image download; attempt ${iteration}/${config.maxDownloadAttempts}`);
     }
     metadata = metadata || await fetchMetadata(id);
