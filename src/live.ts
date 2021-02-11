@@ -59,6 +59,19 @@ export async function live(argv: Arguments) {
                 break;
         }
     });
+
+    ws.on('close', code => {
+       if (code === 1006) {
+           // CloudFlare will close our connection with code 1006 after some point.
+           // We should be fine re-establishing. Hopefully nothing happens between.
+           live(argv);
+       }
+       console.error(new Date(), 'WebSocket closed with code', code);
+    });
+
+    ws.on('error', err => {
+        console.error(new Date(), 'WebSocket threw error', err.message);
+    });
 }
 
 async function handleCommentCreateEvent(comment: Comment) {
