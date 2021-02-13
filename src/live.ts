@@ -29,6 +29,7 @@ export async function live(argv: Arguments) {
     });
 
     ws.on('open', () => {
+        console.debug(new Date(), 'WebSocket opened');
         ws.send(JSON.stringify(joinEvent));
         setInterval(() => ws.send(JSON.stringify(heartbeatEvent)), 30000);
     });
@@ -61,12 +62,10 @@ export async function live(argv: Arguments) {
     });
 
     ws.on('close', code => {
-       if (code === 1006) {
-           // CloudFlare will close our connection with code 1006 after some point.
-           // We should be fine re-establishing. Hopefully nothing happens between.
-           live(argv);
-       }
+       // CloudFlare will close our connection with code 1001 and 1006 after some point.
+       // We should be fine re-establishing. Hopefully nothing happens between.
        console.error(new Date(), 'WebSocket closed with code', code);
+       live(argv);
     });
 
     ws.on('error', err => {
