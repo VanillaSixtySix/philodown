@@ -43,7 +43,7 @@ export async function downloadImage(id: number, metadata?: Image, iteration: num
         return;
     }
     const image = await fetch(metadata.representations.full).catch(err => err);
-    if (image == null || image instanceof Error) {
+    if (image == null || image instanceof Error || (image as String).startsWith('<')) {
         setTimeout(async () => await downloadImage(id, metadata, iteration + 1), config.downloadAttemptRetryTime);
         return;
     }
