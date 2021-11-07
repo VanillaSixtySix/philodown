@@ -39,12 +39,19 @@ export async function downloadImage(id: number, metadata?: Image, iteration: num
     }
     metadata = metadata || await fetchMetadata(id);
     if (metadata.representations?.full == null) {
-        setTimeout(async () => await downloadImage(id, metadata, iteration + 1), config.downloadAttemptRetryTime);
+        setTimeout(async () => {
+            console.error(`Could not find full image representation for ${id}}.`);
+            await downloadImage(id, metadata, iteration + 1);
+        }, config.downloadAttemptRetryTime);
         return;
     }
     const image = await fetch(metadata.representations.full).catch(err => err);
     if (image == null || image instanceof Error || image.toString().startsWith('<html>')) {
-        setTimeout(async () => await downloadImage(id, metadata, iteration + 1), config.downloadAttemptRetryTime);
+        setTimeout(async () => {
+            const reason = image == null ? 'Image is null' : image instanceof Error ? 'Image is error' : image.toString().startsWith('<html>') ? 'Image is HTML' : 'Unknown';
+            console.error(`Could not get image ${id}. (${reason})`);
+            await downloadImage(id, metadata, iteration + 1);
+        }, config.downloadAttemptRetryTime);
         return;
     }
     const extension = extname(metadata.representations.full);
