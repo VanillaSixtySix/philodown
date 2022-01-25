@@ -15,7 +15,10 @@ const argv: Arguments = yargs.options({
     search: { type: 'string', default: '', alias: 's' }
 }).argv;
 
-const outputPath = join(__dirname, '..', config.outputPath);
+let outputPath: string = config.outputPath;
+if (!config.outputPath.startsWith('/')) {
+    outputPath = join(__dirname, '..', config.outputPath);
+}
 
 export const outputPaths = {
     output: outputPath,
