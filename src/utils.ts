@@ -14,6 +14,12 @@ export async function fetchMetadata(id): Promise<Image> {
     return await fetch(`http${config.https && 's'}://${config.origin}/api/v1/json/images/${id}?key=${config.apiKey}`)
         .then(res => res.json())
         .then(res => res.image)
+        .then((image: Image) => {
+            image.created_at = new Date(image.created_at);
+            image.updated_at = new Date(image.updated_at);
+            image.first_seen_at = new Date(image.first_seen_at);
+            return image;
+        })
         .catch(err => err);
 }
 

@@ -4,5 +4,8 @@
   "https": true,
   "outputPath": "output",
   "maxDownloadAttempts": 10,
-  "downloadAttemptRetryTime": 30000
+  "downloadAttemptRetryTime": 30000,
+  "onlyNewImages": false,
+  "onlyNewMetadata": false,
+  "gracePeriodMins": 5
 }

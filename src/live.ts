@@ -17,6 +17,8 @@ import * as fs from 'fs/promises';
 import { existsSync } from 'fs';
 import { downloadImage, fetchMetadata, saveImageMetadata } from './utils';
 
+const startDate = new Date(new Date(new Date().toUTCString()).getTime() - 1000 * config.gracePeriodMins);
+
 const joinEvent = [ 0, 0, 'firehose', 'phx_join', {} ];
 const heartbeatEvent = [ 0, 0, 'phoenix', 'heartbeat', {} ];
 
@@ -82,13 +84,19 @@ async function handleDescriptionUpdateEvent(event: ImageDescriptionUpdateEvent) 
 }
 
 async function handleImageCreateEvent(image: Image) {
-    await saveImageMetadata(image);
+    if (!config.onlyNewMetadata || (config.onlyNewMetadata && new Date(image.created_at) > startDate)) {
+        await saveImageMetadata(image);
+    }
 }
 
 async function handleImageUpdateEvent(image: Image) {
-    await saveImageMetadata(image);
+    if (!config.onlyNewMetadata || (config.onlyNewMetadata && new Date(image.created_at) > startDate)) {
+        await saveImageMetadata(image);
+    }
     if (image.processed && !existsSync(join(outputPaths.images, `${image.id}.${image.format}`))) {
-        await downloadImage(image.id);
+        if (!config.onlyNewImages || (config.onlyNewImages && new Date(image.created_at) > startDate)) {
+            await downloadImage(image.id);
+        }
     }
 }
 
@@ -99,6 +107,10 @@ async function handleImageTagUpdateEvent(event: ImageTagUpdateEvent) {
 async function handleImageProcessEvent(id: number) {
     // We need to fetch the metadata because representations need to be filled
     const metadata = await fetchMetadata(id);
-    await saveImageMetadata(metadata);
-    await downloadImage(null, metadata);
+    if (!config.onlyNewMetadata || (config.onlyNewMetadata && metadata.created_at > startDate)) {
+        await saveImageMetadata(metadata);
+    }
+    if (!config.onlyNewImages || (config.onlyNewImages && metadata.created_at > startDate)) {
+        await downloadImage(null, metadata);
+    }
 }
